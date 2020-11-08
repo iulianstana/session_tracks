@@ -68,15 +68,9 @@ class SessionLocation(Schema):
 class SessionActionDetails(Schema):
     type = 'object'
     properties = {
-        'action': {
-            '$ref': '#/definitions/SessionActionType'
-        },
-        'info': {
-            '$ref': '#/definitions/SessionAction'
-        },
-        'location': {
-            '$ref': '#/definitions/SessionLocation'
-        },
+        'action': SessionActionType,
+        'info': SessionAction,
+        'location': SessionLocation,
         'action_date': {
             'type': 'string',
             'description': "ISO 8601 representation of current date/time with timezone information (using client's timezone)"
