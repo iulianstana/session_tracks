@@ -1,6 +1,9 @@
 from flask_restful_swagger_2 import Schema
 
 
+SessionActionTypeEnum = ['login', 'logout', 'buy', 'review', 'shopping-cart']
+
+
 class SessionAction(Schema):
     type = 'object'
     title = 'Session Action'
@@ -29,7 +32,7 @@ class SessionAction(Schema):
 class SessionActionType(Schema):
     type = 'string'
     title = 'Session Action Type'
-    enum = ['login', 'logout', 'buy', 'review', 'shopping-cart']
+    enum = SessionActionTypeEnum
 
 
 class SessionLocation(Schema):

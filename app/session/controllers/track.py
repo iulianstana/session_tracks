@@ -4,7 +4,9 @@ from flask_restplus import Resource
 from flask_restful.reqparse import RequestParser
 from flask_restful_swagger_2 import swagger
 
-from ..models.models import SessionAction, SessionActionDetails, SessionActionType, SessionLocation
+from ..models.models import (
+    SessionAction, SessionActionDetails, SessionActionType, SessionLocation, SessionActionTypeEnum
+)
 
 
 class TrackSessionAPI(Resource):
@@ -20,7 +22,7 @@ class TrackSessionAPI(Resource):
                 'in': 'path',
                 'type': 'string',
                 'required': True,
-                'enum': ['login', 'logout', 'buy', 'review', 'shopping-cart']
+                'enum': SessionActionTypeEnum
             },
             {
                 'name': 'body',
@@ -51,9 +53,30 @@ class TrackSessionAPI(Resource):
         }
     })
     def post(self, action):
+
+        session_action = None
+        ip = ''
+        if request.json:
+            try:
+                session_action = SessionAction(**request.json)
+            except Exception as exp:
+                return {
+                    'errors': [str(exp)]
+                }, 400
+        if action not in SessionActionTypeEnum:
+            return {
+                'errors': ['{0} is not a valid action.'.format(action)]
+            }
+        
+        if not session_action:
+            # default ip to google.com
+            ip = '8.8.8.8'
+        else:
+            ip = session_action['ip']
+
         actionDetails = SessionActionDetails(
             action=SessionActionType(), 
-            info=SessionAction(ip='1.1.1.1'), 
+            info=SessionAction(ip=ip), 
             location=SessionLocation(
                 longitude=23.6, 
                 latitude=46.7667, 
