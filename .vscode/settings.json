@@ -1,0 +1,11 @@
+{
+    "editor.detectIndentation": false,
+    "files.associations": {
+        "\"python.pythonPath\"": "\"sandbox/bin/python"
+    },
+    "files.exclude": {
+        "sandbox/": true,
+        "**/__pycache__/": true,
+    },
+    "python.pythonPath": "/usr/local/Cellar/python/3.7.5/Frameworks/Python.framework/Versions/3.7/bin/python3.7"
+}
