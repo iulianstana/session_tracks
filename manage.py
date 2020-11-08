@@ -3,11 +3,13 @@ import unittest
 
 from flask_script import Manager
 
+from app import swaggerui_blueprint
 from app.session import create_app
 
 
 
 app = create_app(os.getenv('SESSION_ENV') or 'dev')
+app.register_blueprint(swaggerui_blueprint)
 app.app_context().push()
 manager = Manager(app)
 
