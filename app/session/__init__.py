@@ -19,9 +19,10 @@ def create_app(config_name):
         api_version="1.0.0", 
         produces=['application/json'], 
         schemes=['http'],
-        tags = [{'name':'Tracking', 'description': 'Session Tracking'}], 
-        host= '127.0.0.1:8000')
-    api.add_resource(TrackSessionAPI, '/track/{action}')
+        tags=[{'name':'Tracking', 'description': 'Session Tracking'}], 
+        host='127.0.0.1:8000'
+        )
+    api.add_resource(TrackSessionAPI, '/track/<string:action>')
     flask_bcrypt.init_app(app)
 
     return app
