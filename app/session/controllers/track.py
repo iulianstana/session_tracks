@@ -6,9 +6,10 @@ from flask_restplus import Resource
 from flask_restful.reqparse import RequestParser
 from flask_restful_swagger_2 import swagger
 
-from ..models.models import (
+from app.session.models.models import (
     SessionAction, SessionActionDetails, SessionActionType, SessionLocation, SessionActionTypeEnum
 )
+from app.session.controllers.constants import default_ip
 from clients.ipAPI.client import IpAPIClient
 
 
@@ -76,7 +77,7 @@ class TrackSessionAPI(Resource):
                 'errors': errors
             }, 400
 
-        ip = '8.8.8.8' if not session_action else session_action['ip']
+        ip = default_ip if not session_action else session_action['ip']
         content, status = self.ip_client.get(ip)
         if status == 400:
             return content, status
