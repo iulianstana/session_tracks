@@ -1,13 +1,13 @@
 import json
 
-from mock import patch
-
 from flask_testing import TestCase
+from mock import patch
 from nose.plugins.attrib import attr
+
 from app.session.models.models import SessionActionDetails
 from app.session.controllers.constants import default_ip 
-
 from manage import app
+
 
 @attr('unit')
 class TestTrack(TestCase):

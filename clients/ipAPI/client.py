@@ -12,12 +12,12 @@ class IpAPIClient(object):
 
     def get(self, ip):
         req = self.do_request(ip)
+        
+        content = req.json()
         if req.status_code != 200:
             return {
-                'errors': [req.content]
+                'errors': [content]
             }, 400
-
-        content = req.json()
         if content['status'] != 'success':
             return {
                 'errors': [content]
