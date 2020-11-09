@@ -1,3 +1,5 @@
+import requests
+import datetime
 
 from flask import request
 from flask_restplus import Resource
@@ -7,9 +9,14 @@ from flask_restful_swagger_2 import swagger
 from ..models.models import (
     SessionAction, SessionActionDetails, SessionActionType, SessionLocation, SessionActionTypeEnum
 )
+from clients.ipAPI.client import IpAPIClient
 
 
 class TrackSessionAPI(Resource):
+
+    def __init__(self, *args, **kwargs):
+        self.ip_client = IpAPIClient("TrackSessionAPI")
+        super(TrackSessionAPI, self).__init__(*args, **kwargs)
 
     @swagger.doc({
         'tags': ['Tracking'],
@@ -55,37 +62,37 @@ class TrackSessionAPI(Resource):
     def post(self, action):
 
         session_action = None
-        ip = ''
+        errors = []
         if request.json:
             try:
                 session_action = SessionAction(**request.json)
             except Exception as exp:
-                return {
-                    'errors': [str(exp)]
-                }, 400
+                errors.append(str(exp))
+
         if action not in SessionActionTypeEnum:
+            errors.append('{0} is not a valid action.'.format(action))
+        if errors:
             return {
-                'errors': ['{0} is not a valid action.'.format(action)]
-            }
-        
-        if not session_action:
-            # default ip to google.com
-            ip = '8.8.8.8'
-        else:
-            ip = session_action['ip']
+                'errors': errors
+            }, 400
+
+        ip = '8.8.8.8' if not session_action else session_action['ip']
+        content, status = self.ip_client.get(ip)
+        if status == 400:
+            return content, status
 
         actionDetails = SessionActionDetails(
-            action=SessionActionType(), 
+            action=action, 
             info=SessionAction(ip=ip), 
             location=SessionLocation(
-                longitude=23.6, 
-                latitude=46.7667, 
-                city="Cluj-Napoca", 
-                region="CJ", 
-                country="Romania", 
-                country_iso2="RO", 
-                continent="Europe"
+                longitude=content.get('lon', ''), 
+                latitude=content.get('lat', ''), 
+                city=content.get('city', ''), 
+                region=content.get('region', ''), 
+                country=content.get('country', ''), 
+                country_iso2=content.get('countryCode', ''), 
+                continent=content.get('continent', '')
                 ),
-            action_date="now"
+            action_date=datetime.datetime.now().isoformat()
             )
         return actionDetails, 200

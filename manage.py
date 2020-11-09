@@ -15,7 +15,7 @@ manager = Manager(app)
 
 @manager.command
 def run():
-    app.run(port=8000)
+    app.run(host="0.0.0.0", port=8000)
 
 @manager.command
 def test():
