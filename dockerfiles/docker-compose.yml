@@ -1,9 +1,15 @@
 version: "2"
 services:
-  webserver:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - ../:/opt/session-tracks
-    command: python manage.py run
+    webserver:
+        build: .
+        ports:
+            - "8000:8000"
+        volumes:
+            - ../:/opt/session-tracks
+        command: python manage.py run
+
+    tests:
+        build: .
+        volumes:
+          - ../:/opt/session-tracks
+        command: python manage.py test
